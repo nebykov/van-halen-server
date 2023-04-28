@@ -1,22 +1,24 @@
+import { User } from 'src/users/schemas/User';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
+import { Track } from 'src/tracks/schemas/Track';
 
-export type TrackDocument = Track & Document;
+export type AlbumDocument = Album & Document;
 
 @Schema()
-export class Track {
+export class Album {
     @Prop()
     name: string;
 
-    @Prop()
-    author: string;
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'User'})
+    author: User;
 
     @Prop()
     picture: string;
 
-    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }] })
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }]})
     songs: Track[];
 }
 
-export const TrackSchema = SchemaFactory.createForClass(Track);
+export const AlbumSchema = SchemaFactory.createForClass(Album);

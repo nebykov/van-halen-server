@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
-import { RolesModule } from './roles/roles.module';
 import { TracksModule } from './tracks/tracks.module';
 import { AlbumModule } from './album/album.module';
 import { AuthModule } from './auth/auth.module';
@@ -8,8 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    UsersModule, 
-    RolesModule, 
+    UsersModule,
     TracksModule, 
     AlbumModule, 
     AuthModule,
