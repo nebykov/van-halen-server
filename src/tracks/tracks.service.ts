@@ -5,21 +5,25 @@ import { Model } from 'mongoose';
 import { Comment, CommentDocument } from './schemas/Comment';
 import { User, UserDocument } from 'src/users/schemas/User';
 import { CreateTrackDto } from './dto/create-track.dto';
+import { FileService, FileType } from 'src/file/file.service';
 
 @Injectable()
 export class TracksService {
     constructor(
         @InjectModel(Track.name) private trackModel: Model<TrackDocument>,
         @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
-        @InjectModel(User.name) private userModel: Model<UserDocument>
+        @InjectModel(User.name) private userModel: Model<UserDocument>,
+        private fileService: FileService
         ) {}
 
-        async createTrack(dto: CreateTrackDto): Promise<Track> {
+        async createTrack(dto: CreateTrackDto, picture, audio): Promise<Track> {
+            const picturePath = this.fileService.createFile(dto.authorId, FileType.IMAGE, picture)
+            const audioPath = this.fileService.createFile(dto.authorId, FileType.AUDIO, audio)
             const author =  await this.userModel.findById(dto.authorId)
             if(!author) {
                 throw new HttpException('Author not found', HttpStatus.NOT_FOUND)
             }
-            const track = await this.trackModel.create(dto)
+            const track = await this.trackModel.create({...dto, likes: 0, listens: 0, picture: picturePath, audio: audioPath})
             track.author = author._id
             track.save()
             author.createdTracks.push(track)
