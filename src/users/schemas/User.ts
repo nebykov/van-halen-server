@@ -12,7 +12,7 @@ export class User {
     email: string;
 
     @Prop()
-    userName: string;
+    username: string;
 
     @Prop()
     password: string;
@@ -22,6 +22,9 @@ export class User {
 
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }] })
     createdTracks: Track[];
+
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Album' }] })
+    createdAlbums: Album[];
 
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }] })
     likedTracks: Track[];
