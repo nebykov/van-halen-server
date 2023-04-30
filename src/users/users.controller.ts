@@ -1,11 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
     constructor(private userService: UsersService) {}
-
+ 
 
     @Post()
     createUser(@Body() dto: CreateUserDto) {
@@ -20,6 +21,12 @@ export class UsersController {
     @Get(':id')
     getOneUser(@Param('id') id: string) {
           return this.userService.getOneUser(id)
+    }
+
+    @Post('add_avatar')
+    @UseInterceptors(FileInterceptor('avatar'))
+    addAvatar(@Body('userId') userId: string, @UploadedFile() avatar: Express.Multer.File) {
+        return this.userService.addAvatar(userId, avatar)
     }
 
     @Post(':id/roles')
