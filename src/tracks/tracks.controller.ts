@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('tracks')
 export class TracksController {
@@ -17,6 +18,7 @@ export class TracksController {
         return this.trackService.createTrack(dto, picture[0], audio[0])
     }
 
+    @UseGuards(AuthGuard)
     @Get()
     getAllTracks() {
         return this.trackService.getAllTracks()

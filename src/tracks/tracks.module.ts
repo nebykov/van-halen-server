@@ -6,6 +6,7 @@ import { Track, TrackSchema } from './schemas/Track';
 import { CommentSchema, Comment } from './schemas/Comment';
 import { UsersModule } from 'src/users/users.module';
 import { FileModule } from 'src/file/file.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   providers: [TracksService],
@@ -16,7 +17,8 @@ import { FileModule } from 'src/file/file.module';
       { name: Comment.name, schema: CommentSchema },
     ]),
     UsersModule,
-    FileModule
+    FileModule,
+    AuthModule
   ],
 
   exports: [MongooseModule]

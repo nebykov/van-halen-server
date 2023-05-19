@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User, UserDocument } from 'src/users/schemas/User';
@@ -13,10 +13,31 @@ export class AuthService {
         private jwtService: JwtService
     ) {}
 
+
+    async auth(req) {
+         try {
+             const user = await this.usersService.getOneUser(req?.user?.id)
+             if (!user) {
+                throw new UnauthorizedException({message: 'User Was Not Found'})
+             }
+             const { token } = await this.generateToken(user)
+
+             return {
+                token, user
+             }
+
+         } catch (e) {
+          console.log(e)
+          throw new UnauthorizedException({message: 'Auth Error'})
+         }
+    }
+
     async login(dto: LoginDto) {
             const user = await this.validateUser(dto)
-            const token = await this.generateToken(user)
-            return token
+            const {token} = await this.generateToken(user)
+            return {
+              token, 
+              user}
     }
 
 
@@ -29,7 +50,7 @@ export class AuthService {
           const hashPassword = await bcrypt.hash(dto.password, 5)
           const user = await this.usersService.createUser({...dto, password: hashPassword})
           const token = await this.generateToken(user)
-          return token;
+          return {token, user};
     }
 
     async generateToken(user: UserDocument) {
@@ -42,7 +63,7 @@ export class AuthService {
     async validateUser(dto: LoginDto) {
             const user = await this.usersService.getByEmail(dto.email)
             if(!user) {
-              throw new HttpException('User does not exist', HttpStatus.FORBIDDEN)
+              throw new HttpException('User does not exist', HttpStatus.NOT_FOUND)
             }
             const password = bcrypt.compareSync(dto.password, user.password)
             if (user && password) {
