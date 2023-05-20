@@ -21,6 +21,19 @@ export class SearchService {
             trackname: {$regex: new RegExp(value, 'i')}
         })
 
+        if (tracks.length > 4) {
+          const slicedTracks = tracks.slice(0, 4)
+
+            return {
+                author: author || null,
+                tracks: slicedTracks || []
+              };
+        }
+
+        if (!author && !tracks.length) {
+            return null;
+        }
+
         return {
             author: author || null,
             tracks: tracks || [],
