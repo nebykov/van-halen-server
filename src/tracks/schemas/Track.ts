@@ -27,6 +27,9 @@ export class Track {
     @Prop()
     listens: number
 
+    @Prop({type: Date, default: Date.now()})
+    date: Date
+
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Album'})
     album: Album;
 

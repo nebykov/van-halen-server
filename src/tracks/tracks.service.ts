@@ -45,4 +45,21 @@ export class TracksService {
 
               return track;
         }
+
+
+        async getFavoriteTracks(id: string): Promise<Track[]> {
+               const user = await this.userModel.findById(id).populate({
+                path: 'likedTracks',
+                populate: {
+                    path: 'author',
+                    model: 'User'
+                }
+               })
+
+               if (!user) {
+                throw new HttpException('User was not found', HttpStatus.NOT_FOUND)
+               }
+
+               return user.likedTracks
+        }
 }

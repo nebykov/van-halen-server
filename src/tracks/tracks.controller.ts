@@ -28,4 +28,11 @@ export class TracksController {
     getOneTrack(@Param('id') id: string) {
          return this.trackService.getOneTrack(id)
     }
+
+
+    @Get('favorite/:userId')
+    getFavoriteTracks(@Param('userId') id: string) {
+        return this.trackService.getFavoriteTracks(id)
+    }
+
 }
