@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { SearchModule } from './search/search.module';
 import * as path from 'path';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -14,7 +15,10 @@ import * as path from 'path';
     TracksModule, 
     AlbumModule, 
     AuthModule,
-    MongooseModule.forRoot('mongodb+srv://user:user@vanhalenrec.uigdnsi.mongodb.net/test'),
+    ConfigModule.forRoot({
+      envFilePath: '.env'
+    }) ,
+    MongooseModule.forRoot(process.env.MONGO_URL),
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, 'static'),
     }),
