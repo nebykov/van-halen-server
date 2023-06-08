@@ -16,7 +16,7 @@ export class UsersService {
     ) { }
 
     async createUser(dto: CreateUserDto) {
-        const user = await this.userModel.create(dto)
+        const user = await this.userModel.create({...dto})
         return user;
     }
 
@@ -41,7 +41,7 @@ export class UsersService {
         if (!user) {
             throw new HttpException('User does not exist', HttpStatus.NOT_FOUND)
         }
-        const picturePath = await this.fileService.createFile(userId, FileType.IMAGE, picture)
+        const picturePath = this.fileService.createFile(userId, FileType.IMAGE, picture)
         user.avatar = picturePath
         user.save()
         return user
@@ -51,6 +51,9 @@ export class UsersService {
         const user = await this.userModel.findById(id)
         if (!user) {
             throw new HttpException('User not Found', HttpStatus.NOT_FOUND)
+        }
+        if (user.roles.includes(role)) {
+            throw new HttpException('User has already had a role', HttpStatus.BAD_GATEWAY) 
         }
         user.roles.push(role)
         user.save()

@@ -18,10 +18,14 @@ export class TracksController {
         return this.trackService.createTrack(dto, picture[0], audio[0])
     }
 
-    @UseGuards(AuthGuard)
     @Get()
     getAllTracks() {
         return this.trackService.getAllTracks()
+    }
+
+    @Get('author/:userId')
+    getCreatedTracks(@Param('userId') userId: string) {
+          return this.trackService.getCreatedTracks(userId)
     }
 
     @Get(':id')

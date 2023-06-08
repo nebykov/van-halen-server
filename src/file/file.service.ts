@@ -22,6 +22,7 @@ export class FileService {
             fs.writeFileSync(path.resolve(filePath, fileName), file.buffer)
             return authorId + '/' + type + '/' + fileName
            } catch (e) {
+            console.log(e)
                   throw new HttpException('File upload error', HttpStatus.BAD_REQUEST)
            }
     }

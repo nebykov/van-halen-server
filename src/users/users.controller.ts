@@ -2,7 +2,6 @@ import { Body, Controller, Get, Param, Post, Query, Req, UploadedFile, UseGuards
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AddFavTrackDto } from './dto/add-favoritesong.dto';
 import { AuthGuard } from 'src/auth/jwt-auth.guard';
 import { ObjectId } from 'mongoose';
 
